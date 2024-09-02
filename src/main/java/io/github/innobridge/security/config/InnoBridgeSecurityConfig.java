@@ -4,6 +4,7 @@ import io.github.innobridge.security.model.ExpirationTime;
 import io.github.innobridge.security.security.JwtUtils;
 import io.github.innobridge.security.security.UsernameEmailPasswordAuthenticationFilter;
 import io.github.innobridge.security.security.UsernameEmailPasswordAuthenticationProvider;
+import io.github.innobridge.security.security.UsernameEmailPasswordRegistrationFilter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -72,7 +73,12 @@ public class InnoBridgeSecurityConfig {
 
     @Bean
     public UsernameEmailPasswordAuthenticationFilter usernameEmailPasswordAuthenticationFilter(AuthenticationManager authenticationManager) {
-        return new UsernameEmailPasswordAuthenticationFilter(authenticationManager, "/auth/signin");
+        return new UsernameEmailPasswordAuthenticationFilter(authenticationManager);
+    }
+
+    @Bean
+    public UsernameEmailPasswordRegistrationFilter usernameEmailPasswordRegistrationFilter() {
+        return new UsernameEmailPasswordRegistrationFilter();
     }
 
 }

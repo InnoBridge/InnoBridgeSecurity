@@ -23,10 +23,9 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import static io.github.innobridge.security.constants.HTTPConstants.*;
 import static io.github.innobridge.security.model.TokenType.ACCESS_TOKEN;
 import static io.github.innobridge.security.model.TokenType.REFRESH_TOKEN;
-import static io.github.innobridge.security.constants.HTTPConstants.REFRESH_COOKIE;
-import static io.github.innobridge.security.constants.HTTPConstants.CONTENT_TYPE;
 
 @Component
 public class UsernameEmailPasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -39,9 +38,9 @@ public class UsernameEmailPasswordAuthenticationFilter extends UsernamePasswordA
     @Autowired
     private JwtUtils jwtUtils;
     
-    public UsernameEmailPasswordAuthenticationFilter(AuthenticationManager authenticationManager, String signinUrl) {
+    public UsernameEmailPasswordAuthenticationFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
-        setFilterProcessesUrl(signinUrl);
+        setFilterProcessesUrl(SIGNIN_URL);
     }
 
     @Override

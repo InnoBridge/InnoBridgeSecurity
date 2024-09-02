@@ -30,8 +30,8 @@ public class JwtUtils {
 
     private final UserService userService;
 
-    private final ExpirationTime accessTokenExpiration;
-    private final ExpirationTime refreshTokenExpiration;
+    private ExpirationTime accessTokenExpiration;
+    private ExpirationTime refreshTokenExpiration;
 
     @Autowired
     public JwtUtils(String accessSecretKey, 
@@ -43,6 +43,14 @@ public class JwtUtils {
         this.refreshSigningKey = Keys.hmacShaKeyFor(refreshSecretKey.getBytes());
         this.userService = userService;
         this.accessTokenExpiration = accessTokenExpiration;
+        this.refreshTokenExpiration = refreshTokenExpiration;
+    }
+
+    public void setAccessTokenExpiration(ExpirationTime accessTokenExpiration) {
+        this.accessTokenExpiration = accessTokenExpiration;
+    }
+
+    public void setRefreshTokenExpiration(ExpirationTime refreshTokenExpiration) {
         this.refreshTokenExpiration = refreshTokenExpiration;
     }
 
