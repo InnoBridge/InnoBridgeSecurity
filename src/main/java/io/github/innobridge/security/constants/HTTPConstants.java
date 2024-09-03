@@ -68,4 +68,8 @@ public class HTTPConstants {
 
     public static final String OK = "200";
     public static final String CREATED = "201";
+
+    public static final String BEARER_ACCESS_TOKEN_SCHEMA = "BearerAccessTokenSchema";
+    public static final String BEARER_ACCESS_TOKEN_FORMAT = "JWT";
+    public static final String BEARER = "Bearer";
 }

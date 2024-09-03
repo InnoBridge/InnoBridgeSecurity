@@ -1,10 +1,7 @@
 package io.github.innobridge.security.config;
 
 import io.github.innobridge.security.model.ExpirationTime;
-import io.github.innobridge.security.security.JwtUtils;
-import io.github.innobridge.security.security.UsernameEmailPasswordAuthenticationFilter;
-import io.github.innobridge.security.security.UsernameEmailPasswordAuthenticationProvider;
-import io.github.innobridge.security.security.UsernameEmailPasswordRegistrationFilter;
+import io.github.innobridge.security.security.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +17,9 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import static io.github.innobridge.security.constants.HTTPConstants.REFRESH_TOKEN_URL;
+import static io.github.innobridge.security.constants.HTTPConstants.SIGNOUT_URL;
 
 @Configuration
 public class InnoBridgeSecurityConfig {
@@ -81,4 +81,18 @@ public class InnoBridgeSecurityConfig {
         return new UsernameEmailPasswordRegistrationFilter();
     }
 
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter(JwtUtils jwtUtils) {
+        return new JwtAuthenticationFilter(jwtUtils, SIGNOUT_URL, REFRESH_TOKEN_URL);
+    }
+
+    @Bean
+    public RefreshTokenFilter refreshTokenFilter(JwtUtils jwtUtils) {
+        return new RefreshTokenFilter();
+    }
+
+    @Bean
+    public LogoutFilter logoutFilter() {
+        return new LogoutFilter();
+    }
 }
