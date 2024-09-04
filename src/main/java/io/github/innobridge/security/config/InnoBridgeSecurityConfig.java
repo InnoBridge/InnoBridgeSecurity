@@ -5,12 +5,8 @@ import io.github.innobridge.security.security.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
-
-import io.github.innobridge.security.service.ApplicationSpecificSpringComponentScanMarker;
 import io.github.innobridge.security.service.MongoUserService;
 import io.github.innobridge.security.service.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,8 +15,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 
 import static io.github.innobridge.security.constants.HTTPConstants.*;
 import static org.springframework.security.oauth2.core.AuthorizationGrantType.AUTHORIZATION_CODE;
@@ -61,6 +55,7 @@ public class InnoBridgeSecurityConfig {
         return new ExpirationTime(10, 10, 0, 0); // Default refresh token expiration time: 10 hours
     }
 
+    @Lazy
     @Bean
     public JwtUtils jwtUtils(@Value("${JWT_ACCESS_SIGNING_KEY}") String accessSigningKey,
                              @Value("${JWT_REFRESH_SIGNING_KEY}") String refreshSigningKey,
@@ -101,9 +96,8 @@ public class InnoBridgeSecurityConfig {
 
     @Lazy
     @Bean
-    public CustomOAuth2SuccessHandler customOAuth2SuccessHandler(@Value("${OAUTH2_REDIRECT_BASE_URI}") String baseRedirectUri) {
-        System.out.println("CustomOAuth2SuccessHandler: " + baseRedirectUri);
-        return new CustomOAuth2SuccessHandler(baseRedirectUri, OAUTH2_SUCCESS_URL, OAUTH2_FAILURE_URL);
+    public CustomOAuth2SuccessHandler customOAuth2SuccessHandler() {
+        return new CustomOAuth2SuccessHandler();
     }
 
     @Lazy
