@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 import io.github.innobridge.security.service.ApplicationSpecificSpringComponentScanMarker;
@@ -17,9 +18,13 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 
-import static io.github.innobridge.security.constants.HTTPConstants.REFRESH_TOKEN_URL;
-import static io.github.innobridge.security.constants.HTTPConstants.SIGNOUT_URL;
+import static io.github.innobridge.security.constants.HTTPConstants.*;
+import static org.springframework.security.oauth2.core.AuthorizationGrantType.AUTHORIZATION_CODE;
+import static org.springframework.security.oauth2.core.ClientAuthenticationMethod.CLIENT_SECRET_BASIC;
 
 @Configuration
 public class InnoBridgeSecurityConfig {
@@ -62,8 +67,6 @@ public class InnoBridgeSecurityConfig {
                              UserService userService,
                              @Qualifier("defaultAccessExpirationTime") ExpirationTime accessExpirationTime,
                              @Qualifier("defaultRefreshExpirationTime") ExpirationTime refreshExpirationTime) {
-        System.out.println("accessExpirationTime: " + accessExpirationTime);
-        System.out.println("refreshExpirationTime: " + refreshExpirationTime);
         return new JwtUtils(accessSigningKey,
                 refreshSigningKey,
                 userService,
@@ -95,4 +98,41 @@ public class InnoBridgeSecurityConfig {
     public LogoutFilter logoutFilter() {
         return new LogoutFilter();
     }
+
+    @Lazy
+    @Bean
+    public CustomOAuth2SuccessHandler customOAuth2SuccessHandler(@Value("${OAUTH2_REDIRECT_BASE_URI}") String baseRedirectUri) {
+        System.out.println("CustomOAuth2SuccessHandler: " + baseRedirectUri);
+        return new CustomOAuth2SuccessHandler(baseRedirectUri, OAUTH2_SUCCESS_URL, OAUTH2_FAILURE_URL);
+    }
+
+    @Lazy
+    @Bean
+    public ClientRegistration googleClientRegistration(
+            @Value("${GOOGLE_CLIENT_ID}") String googleClientId,
+            @Value("${GOOGLE_CLIENT_SECRET}") String googleClientSecret,
+            @Value("${OAUTH2_REDIRECT_BASE_URI}") String baseRedirectUri) {
+        System.out.println("hi googleClientRegistration" + Thread.currentThread().getStackTrace());
+        return ClientRegistration.withRegistrationId(GOOGLE_ID)
+                .clientId(googleClientId)
+                .clientSecret(googleClientSecret)
+                .clientAuthenticationMethod(CLIENT_SECRET_BASIC)
+                .authorizationGrantType(AUTHORIZATION_CODE)
+                .redirectUri(baseRedirectUri + GOOGLE_REDIRECT_URI_TEMPLATE)
+                .scope(GOOGLE_SCOPES)
+                .authorizationUri(GOOGLE_AUTHORIZATION_URI)
+                .tokenUri(GOOGLE_TOKEN_URI)
+                .userInfoUri(GOOGLE_USER_INFO_URI)
+                .jwkSetUri(GOOGLE_JWK_SET_URI)
+                .userNameAttributeName(OAUTH2_USER_NAME_ATTRIBUTE)
+                .clientName(GOOGLE_CLIENT_NAME)
+                .build();
+    }
+
+//    @Bean
+//    public ClientRegistrationRepository clientRegistrationRepository(ClientRegistration clientRegistration) {
+//        System.out.println("hi clientRegistrationRepository" + Thread.currentThread().getStackTrace());
+//        return new InMemoryClientRegistrationRepository(clientRegistration);
+//    }
+
 }
