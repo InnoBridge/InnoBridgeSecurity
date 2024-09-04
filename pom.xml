@@ -5,7 +5,7 @@
 
     <groupId>io.github.innobridge</groupId>
     <artifactId>security</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Spring Security Library for OAuth2, JWT, and Refresh Token Handling</description>
     <url>https://github.com/InnoBridge/InnoBridgeSecurity</url>

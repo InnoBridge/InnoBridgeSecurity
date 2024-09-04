@@ -1,10 +1,11 @@
 name: Deploy to Maven Central
 
 on:
-  pull_request:
-    branches:
-      - main
-    types: [closed]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish'
+        required: true
 
 env:
   MAVEN_SERVER_ID: central
@@ -15,11 +16,12 @@ env:
 
 jobs:
   publish:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Step 1 - Checkout code
         uses: actions/checkout@v3
+        with:
+          ref: main
 
       - name: Step 2 - Setup Java Environment
         uses: actions/setup-java@v3
@@ -34,6 +36,7 @@ jobs:
 
       - name: Step 3 - Publish to Maven Central
         run: |
+          mvn versions:set -DnewVersion=${{ github.event.inputs.version }}
           mvn clean deploy -P release \
           -Dgpg.passphrase=${{ env.MAVEN_GPG_PASSPHRASE }} \
           -DskipTests

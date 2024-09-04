@@ -123,10 +123,4 @@ public class InnoBridgeSecurityConfig {
                 .build();
     }
 
-//    @Bean
-//    public ClientRegistrationRepository clientRegistrationRepository(ClientRegistration clientRegistration) {
-//        System.out.println("hi clientRegistrationRepository" + Thread.currentThread().getStackTrace());
-//        return new InMemoryClientRegistrationRepository(clientRegistration);
-//    }
-
 }
