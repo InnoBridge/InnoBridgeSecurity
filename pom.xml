@@ -164,7 +164,7 @@
                     <tokenAuth>true</tokenAuth>
                 </configuration>
             </plugin>
-              <!-- GPG Signed Components -->
+            <!-- GPG Signed Components -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
@@ -176,14 +176,7 @@
                         <goals>
                             <goal>sign</goal>
                         </goals>
-                        <configuration>
-                            <gpgArguments>
-                                <arg>--pinentry-mode</arg>
-                                <arg>loopback</arg>
-                            </gpgArguments>
-                        <passphrase>${env.GPG_PASSPHRASE}</passphrase>
-                    </configuration>
-                  </execution>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
