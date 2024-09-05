@@ -40,9 +40,9 @@ jobs:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-        run: mvn clean deploy \
-              -Dgpg.passphrase=$GPG_PASSPHRASE \
-              -DskipTests \
-              --batch-mode \
-              --update-snapshots
+        run: |
+          mvn clean deploy \
+          -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }} \
+          -DskipTests \
+          --batch-mode
 
