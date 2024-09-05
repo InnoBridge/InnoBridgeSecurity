@@ -19,7 +19,7 @@ jobs:
       - name: Step 2 - Setup Java Environment
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
+          java-version: '22'
           distribution: 'temurin'
           server-id: central
           server-username: ${{ secrets.MAVEN_USERNAME }}
