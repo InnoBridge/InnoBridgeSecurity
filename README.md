@@ -221,7 +221,7 @@ Create the configuration file `SecurityConfig.java`
 @Import(InnoBridgeSecurityConfig.class)
 @EnableMongoRepositories(basePackages = {
         "io.github.innobridge.security.repository",
-        "io.github.yilengyao.jwtauth.repository"
+        <Location of your Mongo Repository>, // eg. "io.yilengyao.jwtauth.repository"
 })
 public class SecurityConfig implements WebMvcConfigurer {
 
