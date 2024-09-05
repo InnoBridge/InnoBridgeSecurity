@@ -7,13 +7,6 @@ on:
         description: 'Version to publish'
         required: true
 
-env:
-  MAVEN_SERVER_ID: central
-  MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-  MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
-  MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-  GPG_PRIVATE_KEY: ${{ secrets.GPG_SECRET_KEY }}
-
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -28,15 +21,13 @@ jobs:
         with:
           java-version: '22'
           distribution: 'temurin'
-          server-id: ${{ env.MAVEN_SERVER_ID }}
-          server-username: ${{ env.MAVEN_USERNAME }}
-          server-password: ${{ env.MAVEN_PASSWORD }}
-          gpg-private-key: ${{ env.GPG_PRIVATE_KEY }}
-          gpg-passphrase: ${{ env.MAVEN_GPG_PASSPHRASE }}
+          server-id: central
+          server-username: ${{ secrets.MAVEN_USERNAME }}
+          server-password: ${{ secrets.MAVEN_PASSWORD }}
+          gpg-private-key: ${{ secrets.GPG_SECRET_KEY }}
+          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Step 3 - Publish to Maven Central
         run: |
           mvn versions:set -DnewVersion=${{ github.event.inputs.version }}
-          mvn clean deploy -P release \
-          -Dgpg.passphrase=${{ env.MAVEN_GPG_PASSPHRASE }} \
-          -DskipTests
+          mvn clean deploy -P release -DskipTests
