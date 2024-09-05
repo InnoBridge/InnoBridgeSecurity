@@ -19,7 +19,7 @@ jobs:
       - name: Step 2 - Setup Java Environment
         uses: actions/setup-java@v3
         with:
-          java-version: '22'
+          java-version: '17'
           distribution: 'temurin'
           server-id: central
           server-username: ${{ secrets.MAVEN_USERNAME }}
@@ -27,7 +27,8 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_SECRET_KEY }}
           gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
-      - name: Step 3 - Publish to Maven Central
-        run: |
-          mvn versions:set -DnewVersion=${{ github.event.inputs.version }}
-          mvn clean deploy -P release -DskipTests
+      - name: Publish to Maven Central
+        env:
+          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+        run: mvn clean deploy -
