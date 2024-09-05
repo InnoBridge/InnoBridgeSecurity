@@ -30,19 +30,15 @@ jobs:
           java-version: '22'
           distribution: 'temurin'
           server-id: central
-          server-username: ${{ secrets.MAVEN_USERNAME }}
-          server-password: ${{ secrets.MAVEN_PASSWORD }}
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
           gpg-private-key: ${{ secrets.GPG_SECRET_KEY }}
-          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Step 3 - Publish Package to Maven Central
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-        run: |
-          mvn clean deploy \
-          -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }} \
-          -DskipTests \
-          --batch-mode
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: mvn clean deploy -P release -DskipTests --batch-mode
 
